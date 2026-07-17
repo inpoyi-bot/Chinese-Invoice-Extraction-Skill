@@ -1,8 +1,8 @@
-# chinese-invoice-extraction
+# Chinese Invoice Extraction — Codex & Claude
 
-A Claude Agent Skill for extracting structured data from Chinese invoices (image, PDF, or text description).
+A portable Agent Skill for extracting structured data from Chinese invoices (image, PDF, or text description). The same `SKILL.md` can be installed in Codex or Claude; it does not rely on provider-specific tool names.
 
-> **Status**: v1.1 — Tested on Sonnet, with known model-dependent limitations. See [Known Limitations](#known-limitations) before use.
+> **Status**: schema v1.2 — Historical testing was performed on Claude Sonnet; extraction quality remains model-dependent. See [Known Limitations](#known-limitations) before use.
 
 ---
 
@@ -24,7 +24,7 @@ The Skill outputs **strict JSON** following a defined schema (see `SKILL.md` for
 ## What It Does NOT Do
 
 - **Does not verify invoice authenticity** — extraction only, no fraud detection
-- **Does not perform OCR by itself** — relies on the underlying Claude model's vision capability
+- **Does not perform OCR by itself** — relies on the current platform's available vision and document-reading capability
 - **Does not handle non-Chinese invoices** — designed specifically for the Chinese 发票 (fapiao) format
 - **Does not de-duplicate or match invoices** — this is a single-invoice extraction Skill
 - **Does not store or persist data** — stateless extraction; downstream storage is the caller's responsibility
@@ -33,16 +33,16 @@ The Skill outputs **strict JSON** following a defined schema (see `SKILL.md` for
 
 ## Installation
 
-### Option 1: Upload to Claude.ai (recommended for end users)
+### Claude
 
 1. Download this repository as a ZIP, or clone it
 2. Go to Claude.ai → Settings → Skills
 3. Click "Add skill" and upload the `chinese-invoice-extraction` folder (or ZIP)
 4. Enable the Skill
 
-### Option 2: Use with Claude API
+### Codex
 
-Refer to [Anthropic's Skills API documentation](https://docs.claude.com) for upload instructions.
+Copy or install the `chinese-invoice-extraction` folder into your Codex skills directory (commonly `~/.codex/skills/`), then start a new Codex task. Codex can load the same `SKILL.md` when the task involves extracting Chinese invoice data.
 
 ---
 
@@ -54,7 +54,7 @@ Refer to [Anthropic's Skills API documentation](https://docs.claude.com) for upl
 
 ```json
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "registration_date": "2026-05-22",
   "invoice_count": 1,
   "invoices": [
@@ -104,11 +104,11 @@ chinese-invoice-extraction/
 
 ## Known Limitations
 
-### Model Dependency
+### Platform and model dependency
 
-**The quality of extraction depends heavily on the underlying Claude model's vision capability. The Skill itself does not perform OCR — it relies entirely on the model's ability to read invoice images.**
+**The quality of extraction depends heavily on the vision and document-reading capability available in the current platform. The Skill itself does not perform OCR — it relies on the model's ability to read invoice images.**
 
-#### Tested Configuration
+#### Historical test configuration
 
 This Skill has been validated **only on Claude Sonnet** (via Claude.ai web client, May 2026).
 
@@ -120,13 +120,13 @@ This Skill has been validated **only on Claude Sonnet** (via Claude.ai web clien
 
 This testing scope reflects the project's nature as a personal learning artifact, not an industrial-grade product. Independent multi-model validation has not been conducted.
 
-#### How to Know Which Model You're Using
+#### Choosing a capable model
 
-Claude.ai's default model varies by subscription tier and conversation type. To check or set the model:
+Use a vision-capable model in your chosen platform. Claude.ai's default model varies by subscription tier and conversation type; Codex model selection depends on your configured surface and workspace.
 
 - **Claude.ai web/app**: The model in use is visible at the bottom of the message input area or in conversation settings
-- **To explicitly request Sonnet**: Start your conversation with "Please use Claude Sonnet for this task" before uploading an invoice
-- **Via API**: Specify `claude-sonnet-4-6` (or current Sonnet model ID) in the model parameter
+- **Claude**: Check the model shown in the conversation UI or settings before uploading an invoice.
+- **Codex**: Use the model configured for your task or workspace, and verify that it can inspect the supplied image or PDF.
 
 #### For Production / Critical Use
 
@@ -147,8 +147,8 @@ These are limits of the underlying vision model, **not** limits of this Skill's 
 The `status` field reflects the model's *self-assessment* of recognition quality. In practice:
 
 - A field tagged `clear` is **not guaranteed correct** — the model may not know it misread a character
-- A field tagged `uncertain` uses `?` placeholders at unclear positions (per v1.1 spec)
-- A field tagged `partial` uses `*` placeholders for obscured characters (per v1.1 spec)
+- A field tagged `uncertain` uses `?` placeholders at unclear positions (per v1.2 spec)
+- A field tagged `partial` uses `*` placeholders for obscured characters (per v1.2 spec)
 
 **Downstream callers should treat `clear` as "high confidence", not "verified correct"**. For critical use (tax filing, reimbursement), human verification of key fields (invoice number, amounts, seller name) is recommended.
 

@@ -1,4 +1,4 @@
-## Examples
+## Output Examples
 
 ### Example 1: Standard Invoice(标准正常发票,单项目)
 
@@ -289,4 +289,3 @@
 - `status` **必须**标 `uncertain`(不可标 clear)
 - warnings 必须**明确说明推断依据**(具体是从哪个字段、什么前缀推断的)
 - **关键区别**:这是"诚实推断"(基于可见证据 + 标 uncertain + warning 说明),不是"幻觉补全"
-

@@ -14,6 +14,14 @@ The schema-compliant JSON is the contract of this Skill.
 
 ---
 
+## Cross-Platform Execution
+
+Use invoice images, PDFs, text, and files supplied in the current request through the capabilities available in the current environment. Do not require a provider-specific tool name, UI flow, working-directory path, external API, or saved conversation state.
+
+Treat every request as stateless. Extract only from the provided invoice evidence and preserve the strict JSON output contract even when the available visual or file-reading capability is limited.
+
+---
+
 ## ANTI-HALLUCINATION REQUIREMENT(反幻觉强制规则)
 
 When extracting any field value, you MUST distinguish between:
